@@ -6,7 +6,7 @@ type command = 'zrange' | 'sismember' | 'get' | 'smemebers'
 
 export async function fetchRedis(
     command:command,
-    ...args:(string | number | null)[] 
+    ...args:(string | number)[] 
 ){
     const commandUrl = `${upstashRedisRestURL}/${command}/${args.join('/')}`
 
