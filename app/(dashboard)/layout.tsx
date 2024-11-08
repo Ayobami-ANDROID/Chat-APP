@@ -4,8 +4,9 @@ import { authOptions } from '../lib/auth'
 import { LayoutProps } from '@/.next/types/app/layout'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Icon, Icons } from '../components/icons'
+import { Icon, Icons } from '../components/Icons'
 import Image from 'next/image'
+import SignOutButton from '../components/SignOutButton'
 
 interface layoutProps {
   children: ReactNode
@@ -78,7 +79,14 @@ const layout = async ({children}: LayoutProps) => {
                         />
                     </div>
                     <span className='sr-only'>Your Profile</span>
+                    <div className='flex flex-col'>
+                        <span aria-hidden='true'>{session.user.name}</span>
+                        <span className='text-xs text-zinc-400' aria-hidden="true">
+                            {session.user.email}
+                        </span>
+                    </div>
                 </div>
+                <SignOutButton className="h-full aspect-square"/>
             </li>
         </ul>
       </nav>
