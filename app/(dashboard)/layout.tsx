@@ -30,7 +30,7 @@ const siderbarOptions:sidebarOption[] = [
     }
 ]
 
-const layout = async ({children}: LayoutProps) => {
+const layout = async ({children}: layoutProps) => {
   const session = await getServerSession(authOptions)
 
   if(!session) notFound()
