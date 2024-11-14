@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { FC } from 'react'
+import Messages from '@/app/components/Messages'
 
 interface pageProps {
   params:{
@@ -66,11 +67,13 @@ const page: FC<pageProps> = async({params}: pageProps) => {
             </div>
             <div className='flex flex-col leading-tight'>
                 <div className='text-xl flex items-center'>
-                    <span>{chatPartner.name}</span>
+                    <span  className='text-gray-700 mr-3 font-semibold'>{chatPartner.name}</span>
                 </div>
+                <span className='text-sm text-gray-600'>{chatPartner.email}</span>
             </div>
         </div>
     </div>
+    <Messages/>
   </div>
 }
 
