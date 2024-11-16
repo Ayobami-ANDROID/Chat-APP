@@ -26,28 +26,33 @@ async function getChatMessages(chatId:string){
         const reversedDbMessages = dmessages.reverse()
 
         const messages = messageArrayValidator.parse(reversedDbMessages)
+        return messages
     } catch (error) {
         notFound()
     }
 }
 
 const page: FC<pageProps> = async({params}: pageProps) => {
-    const {chatId} = params
+    const { chatId } = params
     const session = await getServerSession(authOptions)
-
-    if(!session) notFound()
-
-    const {user} = session
-
-    const[userId1,userId2]=chatId.split('--')
-
-    if(user.id !== userId1 && user.id !== userId2){
-        notFound()
+    if (!session) notFound()
+  
+    const { user } = session
+  
+    const [userId1, userId2] = chatId.split('--')
+  
+    if (user.id !== userId1 && user.id !== userId2) {
+      notFound()
     }
-
-
-    const chatPatnerId = user.id === userId1 ? userId2 : userId1
-    const chatPartner = (await db.get(`user:${chatPatnerId}`)) as User
+  
+    const chatPartnerId = user.id === userId1 ? userId2 : userId1
+    // new
+  
+    const chatPartnerRaw = (await fetchRedis(
+      'get',
+      `user:${chatPartnerId}`
+    )) as string
+    const chatPartner = JSON.parse(chatPartnerRaw) as User
     const initialMessages = await getChatMessages(chatId)
 
 
@@ -73,7 +78,7 @@ const page: FC<pageProps> = async({params}: pageProps) => {
             </div>
         </div>
     </div>
-    <Messages/>
+    <Messages initialMessages={initialMessages} sessionId={session.user.id}/>
   </div>
 }
 
