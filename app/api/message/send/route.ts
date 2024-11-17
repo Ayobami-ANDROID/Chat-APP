@@ -4,6 +4,8 @@ import { db } from "@/app/lib/db"
 import { timeStamp } from "console"
 import { getServerSession } from "next-auth"
 import { nanoid } from 'nanoid'
+import { Message, messageValidator } from "@/app/lib/valiations/message"
+
 
  export async function POST(req:Request){
     try {
@@ -32,26 +34,33 @@ import { nanoid } from 'nanoid'
 
         //all valid, send the message
 
-        const timestamp = Date.now()
+        const timeStamp = Date.now()
 
         const messageData:Message = {
             id: nanoid(),
             senderId: session.user.id,
             text,
-            timestamp, 
+            timeStamp, 
         }
 
 
-        const message
+        const message = messageValidator.parse(messageData)
 
-        await db.zadd(`chat:${chatId}:messages`,{
-            score: timeStamp
-            member:JSON.stringify(message)
-        })
-        console.log("sender",sender)
+        await db.zadd(`chat:${chatId}:messages`, {
+            score: timeStamp,
+            member: JSON.stringify(message),
+          })
+
+
+          return new Response('OK')
+        // console.log("sender",sender)
 
          
     } catch (error) {
-        
+        if(error instanceof Error){
+            return new Response(error.message,{status:500})
+        }
+
+        return new Response('Ínternal Server Error',{status:500})
     }
  }
