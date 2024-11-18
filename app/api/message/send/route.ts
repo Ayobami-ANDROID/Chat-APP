@@ -17,7 +17,7 @@ import { Message, messageValidator } from "@/app/lib/valiations/message"
         const[userId1,userId2] = chatId.split('--')
 
         if(session.user.id !== userId1 && session.user.id !==userId2){
-            return new Response('Unauthorized',{status:401})
+            return new Response('Unauthorized high cheif',{status:401})
         } 
 
         const friendId = session.user.id === userId1 ? userId2 : userId1
